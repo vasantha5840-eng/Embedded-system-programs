@@ -1,0 +1,17 @@
+#include <avr/io.h>
+
+#define F_CPU 16000000UL
+
+int main(void)
+{
+    DDRB &= ~(1 << PB0);  // PB0 input
+    DDRB |= (1 << PB5);   // PB5 output
+
+    while (1)
+    {
+        if (PINB & (1 << PB0))
+            PORTB |= (1 << PB5);
+        else
+            PORTB &= ~(1 << PB5);
+    }
+}
