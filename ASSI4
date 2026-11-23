@@ -1,0 +1,46 @@
+#include "main.h"
+
+int main(void)
+{
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+
+    while (1)
+    {
+        // Clockwise rotation
+        GPIOA->ODR &= ~0x000F;
+        GPIOA->ODR |=  (1U << 0);
+        HAL_Delay(5);
+
+        GPIOA->ODR &= ~0x000F;
+        GPIOA->ODR |=  (1U << 1);
+        HAL_Delay(5);
+
+        GPIOA->ODR &= ~0x000F;
+        GPIOA->ODR |=  (1U << 2);
+        HAL_Delay(5);
+
+        GPIOA->ODR &= ~0x000F;
+        GPIOA->ODR |=  (1U << 3);
+        HAL_Delay(5);
+
+        // Anticlockwise rotation
+        GPIOA->ODR &= ~0x000F;
+        GPIOA->ODR |=  (1U << 3);
+        HAL_Delay(5);
+
+        GPIOA->ODR &= ~0x000F;
+        GPIOA->ODR |=  (1U << 2);
+        HAL_Delay(5);
+
+        GPIOA->ODR &= ~0x000F;
+        GPIOA->ODR |=  (1U << 1);
+        HAL_Delay(5);
+
+        GPIOA->ODR &= ~0x000F;
+        GPIOA->ODR |=  (1U << 0);
+        HAL_Delay(5);
+    }
+}
+
