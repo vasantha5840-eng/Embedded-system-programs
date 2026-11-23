@@ -1,0 +1,80 @@
+#include "main.h"
+
+#define RS GPIO_PIN_0
+#define EN GPIO_PIN_1
+
+void lcd_enable(void)
+{
+    GPIOA->ODR |= (1U << 1);
+    HAL_Delay(1);
+
+    GPIOA->ODR &= ~(1U << 1);
+    HAL_Delay(1);
+}
+
+void lcd_send(unsigned char data)
+{
+    GPIOA->ODR &= ~(0xF0U);
+    GPIOA->ODR |= (data & 0xF0U);
+
+    lcd_enable();
+
+    GPIOA->ODR &= ~(0xF0U);
+    GPIOA->ODR |= ((data << 4) & 0xF0U);
+
+    lcd_enable();
+}
+
+void lcd_command(unsigned char cmd)
+{
+    GPIOA->ODR &= ~(1U << 0);
+
+    lcd_send(cmd);
+    HAL_Delay(2);
+}
+
+void lcd_data(unsigned char data)
+{
+    GPIOA->ODR |= (1U << 0);
+
+    lcd_send(data);
+    HAL_Delay(2);
+}
+
+void lcd_string(char *str)
+{
+    while (*str)
+    {
+        lcd_data(*str++);
+    }
+}
+
+void lcd_init(void)
+{
+    HAL_Delay(20);
+
+    lcd_command(0x02);
+    lcd_command(0x28);
+    lcd_command(0x0C);
+    lcd_command(0x06);
+    lcd_command(0x01);
+}
+
+int main(void)
+{
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+
+    lcd_init();
+
+    lcd_command(0x80);
+    lcd_string("HELLO STUDENTS");
+
+    lcd_command(0xC0);
+    lcd_string("WELCOME TO STM32");
+
+    while (1)
+    {
+    }
+}
