@@ -1,0 +1,32 @@
+#include "main.h"
+#include <stdio.h>
+#include <string.h>
+
+uint16_t soil, light;
+uint8_t temp = 28, humidity = 70;
+char msg[100];
+
+int main(void)
+{
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
+    MX_USART1_UART_Init();
+    MX_ADC1_Init();
+
+    while(1)
+    {
+        soil = 65;   // Sample soil data
+        light = 80;  // Sample light data
+
+        sprintf(msg,
+        "Soil: %u\r\nTemp: %u C\r\nHumidity: %u%%\r\nLight: %u\r\n",
+        soil, temp, humidity, light);
+
+        HAL_UART_Transmit(&huart1,
+        (uint8_t*)msg, strlen(msg), 100);
+
+        HAL_Delay(1000);
+    }
+}
+
